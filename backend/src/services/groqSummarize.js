@@ -7,7 +7,8 @@
  */
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const DEFAULT_MODEL = 'llama-3.1-8b-instant';
+// llama-3.1-8b-instant was retired on Groq (Aug 2026). Use the free-tier replacement.
+const DEFAULT_MODEL = 'openai/gpt-oss-20b';
 const MAX_SOURCE_CHARS = 14000;
 
 const LENGTH_GUIDANCE = {

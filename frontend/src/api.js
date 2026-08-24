@@ -5,6 +5,13 @@ async function parseJSONSafe(response) {
   try {
     return JSON.parse(text);
   } catch {
+    const looksLikeHtml = /<!doctype html|<html[\s>]/i.test(text);
+    if (looksLikeHtml) {
+      return {
+        error:
+          'The app could not reach the backend API. On Netlify, set VITE_API_URL to your Render URL ending in /api, then trigger a new deploy.'
+      };
+    }
     return { error: text || 'Unexpected server response.' };
   }
 }
@@ -28,7 +35,9 @@ export async function processDocument(file, length, docType = 'document', { sign
     });
   } catch (err) {
     if (err.name === 'AbortError') throw err;
-    throw new Error('Could not reach the server. Check your connection and try again.');
+    throw new Error(
+      `Could not reach the API at ${API_BASE}. If you are on Netlify, set VITE_API_URL to your Render URL ending in /api and redeploy. If the backend is on Render free tier, wait ~60s for it to wake up and try again.`
+    );
   }
 
   const data = await parseJSONSafe(response);
@@ -52,7 +61,9 @@ export async function resummarize(text, length, docType = 'document', { signal }
     });
   } catch (err) {
     if (err.name === 'AbortError') throw err;
-    throw new Error('Could not reach the server. Check your connection and try again.');
+    throw new Error(
+      `Could not reach the API at ${API_BASE}. If you are on Netlify, set VITE_API_URL to your Render URL ending in /api and redeploy. If the backend is on Render free tier, wait ~60s for it to wake up and try again.`
+    );
   }
 
   const data = await parseJSONSafe(response);

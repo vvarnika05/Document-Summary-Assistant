@@ -8,9 +8,25 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Browsers send Origin without a trailing slash. Normalize so a common
+// Render misconfig like "https://site.netlify.app/" still works.
+function normalizeOrigin(value) {
+  if (!value || value === '*') return value || '*';
+  return value.replace(/\/+$/, '');
+}
+
+const corsOrigin = normalizeOrigin(process.env.CORS_ORIGIN || '*');
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*'
+  origin: corsOrigin === '*'
+    ? '*'
+    : (origin, callback) => {
+        if (!origin || normalizeOrigin(origin) === corsOrigin) {
+          callback(null, true);
+        } else {
+          callback(null, false);
+        }
+      }
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +36,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     summarizer: process.env.GROQ_API_KEY ? 'groq' : 'textrank',
+    corsOrigin,
     timestamp: new Date().toISOString()
   });
 });
@@ -37,4 +54,5 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Document Summary Assistant API running on port ${PORT}`);
+  console.log(`CORS origin: ${corsOrigin}`);
 });
