@@ -4,6 +4,8 @@ Upload a **document** or a **bill/receipt**, extract the text (PDF parse or
 Tesseract OCR), and get a structured summary — written reviews for docs, smart
 totals / due dates / action items for bills.
 
+**Live demo:** https://beamish-platypus-38a209.netlify.app
+
 **Stack:** Node.js/Express · React (Vite) · `pdfjs-dist` · `tesseract.js` ·
 [Groq](https://console.groq.com) free-tier LLM (with offline fallbacks)
 
