@@ -1,0 +1,27 @@
+{
+  "name": "document-summary-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Document Summary Assistant - extracts text from PDFs/images and generates AI-written reviews (Groq) with TextRank fallback",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "setup-ocr": "node scripts/setup-ocr.js",
+    "postinstall": "node scripts/setup-ocr.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^2.0.0",
+    "pdfjs-dist": "^4.10.38",
+    "tesseract.js": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
